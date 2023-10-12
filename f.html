@@ -102,3 +102,40 @@ function m=bise2(f,a,b,err)
     c=c+1;
   endwhile
 endfunction
+
+
+  function s=sim(f,a,n)
+  for i=0:n
+    fprintf('| %6.2f  |   %6.7f    |\n',a,f(a));
+    a=a+0.5;
+  endfor 
+endfunction
+
+
+
+
+function sistemaTriangularSuperior(A, b)
+    % A es la matriz de coeficientes del sistema de ecuaciones
+    % b es el vector de términos constantes
+
+    [filas, columnas] = size(A);
+    
+    if filas ~= columnas
+        error('La matriz A debe ser cuadrada para convertirla en triangular superior.');
+    end
+
+    n = filas;
+    
+    for k = 1:n-1
+        for i = k+1:n
+            factor = A(i,k) / A(k,k);
+            A(i,k:n) = A(i,k:n) - factor * A(k,k:n);
+            b(i) = b(i) - factor * b(k);
+        end
+    end
+
+    disp('La matriz triangular superior resultante (A):');
+    disp(A);
+    disp('El vector de términos constantes resultante (b):');
+    disp(b);
+end
