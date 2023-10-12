@@ -1,0 +1,104 @@
+function raiz=newton(f,x0,tol)
+  k=0;
+  g=@(x) x-f(x)/derivada(f,x);
+  x1=g(x0);
+  fprintf('|   k   |   x0  |\n');
+  while abs(x1-x0)>=tol
+    fprintf('| %10.6f | %10.6f |\n',k,x1);
+    x0=x1;
+    x1=g(x0);
+    k=k+1;
+  endwhile
+  raiz=x1;
+endfunction
+
+
+function m=pfalsa(f,a,b,tol)
+  m=(a*f(b)+b*f(a))/(f(b)-f(a));
+  k=0;
+  fprintf('|   k   |   a   |   b   |  m   |\n');
+  while abs(b-a)>tol
+    fprintf('| %10.6f | %10.6f | %10.6f | %10.6f |\n',k,a,b,m)
+    if f(a)*f(m)<0
+      b=m;
+    else
+      a=m;
+    endif
+    m=(a*f(b)+b*f(a))/(f(b)-f(a));
+    k=k-1;
+  endwhile
+endfunction
+
+
+function raiz = puntofi(f, x0, tol, tope)
+    count = 0;
+    x = x0;
+    g=@(x) x-f(x)/derivada(f,x);
+    fprintf('|   iteracion   |   valor  |\n');
+    while count < tope
+        x_prev = x;
+        x = g(x_prev);
+        fprintf('| %10.8f | %10.8f |\n',count,x);
+        if abs(x - x_prev) < tol
+            raiz = x;
+            return;
+        endif
+        count = count + 1;
+    endwhile
+endfunction
+
+
+function suma = sumpri(n)
+    suma = 0;
+    for i = 2:n-1
+        if primo(i)
+            suma = suma + i;
+        end
+    end
+end
+
+
+
+function g=matriz(d)
+  A=ones(d);
+  for i=1:d
+    for j =1:d
+      if(i>=j)
+      A(i,j)=j*((-1)^(i+j))-2*1;
+    elseif (i<j)
+      A(i,j)=3*i+2*j;
+    endfor
+  endfor
+  g=A;
+endfunction
+
+
+
+function raiz=secantede(f,x0,err)
+  raiz=x0-f(x0)/derivada(f,x0);
+  c=0;
+  fprintf('|     k    |     a    |\n');  
+  while abs(raiz-x0)>err
+    fprintf('|%10.6f|%10.6f|\n',c,x0) 
+    x0=raiz;
+    raiz=x0-f(x0)/derivada(f,x0);
+    c=c+1;
+  endwhile
+disp(c)
+
+
+function m=bise2(f,a,b,err)
+  m=(a+b)/2;
+  c=0;
+  fprintf('|     k    |     a    |     b    |     m    |\n');  
+  while abs(b-a)>err
+    fprintf('|%10.6f|%10.6f|%10.6f|%10.6f|\n',c,a,b,m) 
+    if f(a)*f(m)<0;
+      b=m;
+    else 
+      a=m;
+    endif
+    m=(a+b)/2;
+    c=c+1;
+  endwhile
+endfunction
