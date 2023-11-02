@@ -12,7 +12,6 @@ function raiz=newton(f,x0,tol)
   raiz=x1;
 endfunction
 
-
 function m=pfalsa(f,a,b,tol)
   m=(a*f(b)+b*f(a))/(f(b)-f(a));
   k=0;
@@ -189,3 +188,46 @@ function sistemaTriangularSuperior(A, b)
     disp('El vector de términos constantes resultante (b):');
     disp(b);
 end
+
+function p=lagrange(tx,ty)
+  n=length(tx);
+  L=poly(tx(2:n));
+  p=L*ty(1)/polyval(L,tx(1));
+  for k=2:n
+    L = poly([tx(1:k-1),tx(k+1:n)]);
+    p = p + L*ty(k)/polyval(L,tx(k));
+  endfor
+endfunction
+
+function p=newtonp(tx,ty)
+  n=length(tx);
+  p=[ty(1)];
+  for k=2:n
+    q=poly(tx(1:k-1));
+    A=(ty(k)-polyval(p,tx(k)))/polyval(q,tx(k));
+    p=[0,p]+A*q;
+  endfor
+endfunction
+
+function g = spline1(x,y,n)
+  g = interp1(x,y,n,"spline");
+endfunction
+
+function integral = intepoly(coefficients)
+    n = length(coefficients) - 1; 
+    integral = zeros(1, n + 1); 
+    for i = 1:(n + 1)
+        integral(i) = coefficients(i) / (n + i);
+    end
+end
+
+funciones de polinomios
+polyval(p,x): Devuelve el polinomio evaluado en el valor x.
+conv(p,q): Devuelve el vector de coeficientes resultante del producto de los polinomios p y q.
+deconv(p,q): Devuelve el cociente y el residuo de la división de polinomios.
+roots(p): Devuelve un vector cuyas componentes son las raíces del polinomio
+poly(p): Reconstruye un polinomio a partir de las raíces del mismo.
+polyout(p,’x’): Expresa el polinomio en términos de la variable x.
+polyder(p): Devuelve el vector derivada del polinomio.
+polyint(p): Devuelve el vector integral del polinomio.
+polyfit(x,y,n): Devuelve el polinomio de grado n que mejor se ajusta por minimos cuadrados al conjunto de puntos (𝑥𝑖, 𝑦𝑖)
