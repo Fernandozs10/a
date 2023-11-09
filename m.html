@@ -221,6 +221,29 @@ function integral = intepoly(coefficients)
     end
 end
 
+function A=romberg(f,a,b,error)
+  r(1,1)=trapecio(f,a,b,1);
+  r(2,1)=trapecio(f,a,b,2);
+  r(2,2)=(4*r(2,1)-r(1,1))/3;
+  k=2;
+  while abs(r(k,k)-r(k,k-1))>=error
+    k=k+1;
+    r(k,1)=trapecio(f,a,b,2^(k-1));
+    for j=2:k
+      r(k,j)=(4^(j-1)*r(k,j-1)-r(k-1,j-1))/(4^(j-1)-1);
+    endfor
+  endwhile
+A=r;
+end
+
+function I=trapecio(a,b,n,f)
+  h=(b-a)/n;
+  I=0;
+  for k=1:n
+    I=I+f(a+(k-1)*h)+f(a+k*h);
+  endfor
+  I=I*h/2;
+
 funciones de polinomios
 polyval(p,x): Devuelve el polinomio evaluado en el valor x.
 conv(p,q): Devuelve el vector de coeficientes resultante del producto de los polinomios p y q.
