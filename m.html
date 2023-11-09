@@ -264,6 +264,42 @@ function resultado = integral_personalizada(funcion, limite_inferior, limite_sup
 end
 
 
+% Define la función de la sección transversal A(x)
+function area = cross_section_area(x)
+    % Aquí debes poner la expresión de A(x) en términos de x
+    area = x^2; % Ejemplo: x^2 como área de la sección transversal
+end
+
+% Definir los límites de integración
+a = 0;
+b = 1;
+
+% Calcular el volumen utilizando la integral definida
+volume = quad(@cross_section_area, a, b);
+
+disp(['El volumen del sólido es: ' num2str(volume)]);
+
+
+
+% Define las funciones f(x) y g(x)
+function y = f(x)
+    y = x^2; % Puedes cambiar esto con tu función f(x)
+end
+
+function y = g(x)
+    y = x; % Puedes cambiar esto con tu función g(x)
+end
+
+% Definir los límites de integración
+a = 0;
+b = 1;
+
+% Calcular el área entre las dos curvas
+area = quad(@(x) abs(f(x) - g(x)), a, b);
+
+disp(['El área entre las dos curvas es: ' num2str(area)]);
+
+
       
 funciones de polinomios
 polyval(p,x): Devuelve el polinomio evaluado en el valor x.
