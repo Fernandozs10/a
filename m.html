@@ -244,6 +244,27 @@ function I=trapecio(a,b,n,f)
   endfor
   I=I*h/2;
 
+
+function resultado = integral_personalizada(funcion, limite_inferior, limite_superior, parametros)
+    % funcion: la expresión matemática a integrar
+    % limite_inferior: límite inferior de integración
+    % limite_superior: límite superior de integración
+    % parametros: parámetros de la función
+
+    % Define la variable simbólica
+    syms x;
+
+    % Crea la función simbólica con los parámetros dados
+    f = sym(funcion);
+    f = subs(f, parametros(1), x);
+    f = subs(f, parametros(2), x);
+
+    % Calcula la integral definida
+    resultado = int(f, limite_inferior, limite_superior);
+end
+
+
+      
 funciones de polinomios
 polyval(p,x): Devuelve el polinomio evaluado en el valor x.
 conv(p,q): Devuelve el vector de coeficientes resultante del producto de los polinomios p y q.
