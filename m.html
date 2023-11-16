@@ -299,7 +299,29 @@ area = quad(@(x) abs(f(x) - g(x)), a, b);
 
 disp(['El área entre las dos curvas es: ' num2str(area)]);
 
+function [ty,tn]=euler(f,t0,y0,T,p)
+  ty(1) = y0;
+  tn(1) = t0;
+  h = (T/p);
+  for k=2:p
+    tn(k) = tn(k-1) + h;
+    ty(k) = ty(k-1) + h*f(tn(k-1),ty(k-1));
+  end
+end
 
+function d=TAYLOR(f,ft,fy,t0,y0,T,p)
+  
+h = T/p;
+t = zeros(p+1,1);
+y = zeros(p+1,1);
+t(1) = t0;
+y(1) = y0;
+for k=2:1:p+1
+  t(k) = t(k-1)+h;
+  y(k) = y(k-1)+hf(t(k-1),y(k-1))+(1/2)(h^2)*(ft(t(k-1),y(k-1))+fy(t(k-1),y(k-1))*f(t(k-1),y(k-1)));
+end
+plot(t,y,'*');
+d=[t y];
       
 funciones de polinomios
 polyval(p,x): Devuelve el polinomio evaluado en el valor x.
