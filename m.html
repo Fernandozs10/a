@@ -322,7 +322,25 @@ for k=2:1:p+1
 end
 plot(t,y,'*');
 d=[t y];
-      
+
+function resultado = simpson(f, a, b, n)
+    if mod(n, 2) ~= 0
+        error('El número de subintervalos (n) debe ser par para el método de Simpson.');
+    end
+    h = (b - a) / n;
+    x = a:h:b;
+    suma = f(a) + f(b);
+    for i = 2:n-1
+        if mod(i, 2) == 0
+            suma = suma + 4 * f(x(i));
+        else
+            suma = suma + 2 * f(x(i));
+        end
+    end
+    resultado = h / 3 * suma;
+end
+
+  
 funciones de polinomios
 polyval(p,x): Devuelve el polinomio evaluado en el valor x.
 conv(p,q): Devuelve el vector de coeficientes resultante del producto de los polinomios p y q.
