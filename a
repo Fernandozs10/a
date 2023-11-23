@@ -40,6 +40,24 @@ function [t,y]=TAYLOR(f,ft,fy,t0,y0,T,p)
   %plot(t,y,'*');
 endfunction
 
+function [t, y] = TAYLOR(f, ft, fy, t0, y0, T, p)
+  h = T / p;
+  t = zeros(p+1, 1);
+  y = zeros(p+1, 1);
+  t(1) = t0;
+  y(1) = y0;
+  for i = 2:p+1
+    t(i) = t(i-1) + h;
+    y(i) = y(i-1) + h * f(t(i-1), y(i-1)) + (ft(t(i-1), y(i-1)) + fy(t(i-1), y(i-1)) * f(t(i-1), y(i-1))) * h^2 / 2;
+  endfor
+  
+  % Para obtener la expansión de Taylor de orden 2 en cada paso, puedes imprimir o visualizar los resultados
+  for i = 1:p+1
+    fprintf('Orden 2 en t=%f: y=%f\n', t(i), y(i));
+  endfor
+endfunction
+
+
 function [t,y]=EULER(f,t0,y0,T,p)
   h=T/p;
   t=zeros(p+1,1);
