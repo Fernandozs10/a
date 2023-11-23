@@ -1,164 +1,169 @@
-23/08 Miércoles
-lidiando con datos multidimensionales 
+function p=newtonp(tx,ty)
+  n=length(tx);
+  p=[ty(1)];
+  for k=2:n
+    q=poly(tx(1:k-1));
+    A=(ty(k)-polyval(p,tx(k)))/polyval(q,tx(k));
+    p=[0 p]+A*q;
+  endfor
+endfunction
 
-DATA:
+function [t,y]=HEUN(f,t0,y0,T,p)
+  h=T/p;
+  t=zeros(p+1,1);
+  y=zeros(p+1,1);
+  t(1)=t0;
+  y(1)=y0;
+  for i=2:p+1
+    t(i)=t(i-1)+h;
+    y(i)=y(i-1)+(f(t(i-1),y(i-1))+f(t(i-1)+h,y(i-1)+h*f(t(i-1),y(i-1))))*h/2;
+  endfor
+  %d=[t,y];
+  %plot(t,y,'*');
+endfunction
 
-un dato es un elemento llamados unidimensionales if it is characterized by a single unique attribute or key value. for example, single dimensional data structures are balanced binary trees, B-trees, AVL-trees, hash tables, multiway, trees, etc.
+function [t,y]=TAYLOR(f,ft,fy,t0,y0,T,p)
+  h=T/p;
+  t=zeros(p+1,1);
+  y=zeros(p+1,1);
+  t(1)=t0;
+  y(1)=y0;
+  for i=2:p+1
+    t(i)=t(i-1)+h;
+    y(i)=y(i-1)+h*f(t(i-1),y(i-1))+(ft(t(i-1),y(i-1))+fy(t(i-1),y(i-1))*f(t(i-1),y(i-1)))*h^2/2;
+  endfor
+  %d=[t,y];
+  %P=newtonp(t,y);
+  %a=t0:0.01:t0+T;
+  %plot(a,polyval(P,a));
+  %hold on 
+  %plot(t,y,'*');
+endfunction
 
-DATOS MULTIDIMENSIONALES
+function [t,y]=EULER(f,t0,y0,T,p)
+  h=T/p;
+  t=zeros(p+1,1);
+  y=zeros(p+1,1);
+  t(1)=t0;
+  y(1)=y0;
+  for i=2:p+1
+    t(i)=t(i-1)+h;
+    y(i)=y(i-1)+h*f(t(i-1),y(i-1));
+  endfor
+  %d=[t,y];
+  %P=newtonp(t,y);
+  %a=t0:0.01:t0+T;
+  %plot(a,polyval(P,a));
+  %hold on 
+  %plot(t,y,'*');
+endfunction
 
-es representado por varias dimensiones y cada una de estas son características del dato
-y estos podrían ser una matriz personas y muchas cosas (casi todos) estas características ayudan a diferenciar los datos similares  
+function [t,y]=RK3(f,t0,y0,T,p)
+  h=T/p;
+  t=zeros(p+1,1);
+  y=zeros(p+1,1);
+  t(1)=t0;
+  y(1)=y0;
+  for i=2:p+1
+    t(i)=t(i-1)+h;
+    k1=h*f(t(i-1),y(i-1));
+    k2=h*f(t(i-1)+h/2,y(i-1)+k1/2);
+    k3=h*f(t(i-1)+3*h/4,y(i-1)+3*k2/4);
+    y(i)=y(i-1)+2*k1/9+k2/3+4*k3/9;
+  endfor
+  %d=[t,y];
+  %plot(t,y,'*');
+endfunction
 
-Data nos da puntos en el espacio multidimensional
+function [t,y]=RK4(f,t0,y0,T,p)
+  h=T/p;
+  t=zeros(p+1,1);
+  y=zeros(p+1,1);
+  t(1)=t0;
+  y(1)=y0;
+  for i=2:p+1
+    t(i)=t(i-1)+h;
+    k1=h*f(t(i-1),y(i-1));
+    k2=h*f(t(i-1)+h/2,y(i-1)+k1/2);
+    k3=h*f(t(i-1)+h/2,y(i-1)+k2/2);
+    k4=h*f(t(i-1)+h,y(i-1)+k3);
+    y(i)=y(i-1)+k1/6+k2/3+k3/3+k4/6;
+  endfor
+  %d=[t,y];
+  %plot(t,y,'*');
+endfunction
 
-imagenes/ videos.
-health estatus of patients.
-ecological data.
-climate data. 
-financial data.
-retos:
-costo de procesamiento
-costo de almacenamiento 
-costo de acceso 
-visualización
+function A = romberg(f,a,b,error)
+  r(1,1) = trapecios(f,a,b,1);
+  r(2,1) = trapecios(f,a,b,2);
+  r(2,2) = (4*r(2,1)-r(1,1))/3;
+  k = 2;
+  while abs(r(k,k) - r(k,k-1))>=error
+    k = k+1;
+    r(k,1) = trapecios(f,a,b,2^(k-1));
+    for j = 2:k
+      r(k,j) = (4^(j-1)*r(k,j-1)-r(k-1,j-1))/(4^(j-1)-1);
+    endfor
+  endwhile
+  A = r(k,k);
+endfunction
 
-Tipos de datos 
+function [t,y]=TAYLOR3(f,ft,fy,ftt,fyy,fty,t0,y0,T,p)
+  h=T/p;
+  t=zeros(p+1,1);
+  y=zeros(p+1,1);
+  t(1)=t0;
+  y(1)=y0;
+  for i=2:p+1
+    t(i)=t(i-1)+h;
+    a=ftt(t(i-1),y(i-1))+2*fty(t(i-1),y(i-1))*f(t(i-1),y(i-1))+fyy(t(i-1),y(i-1))*f(t(i-1),y(i-1))^2+ft(t(i-1),y(i-1))*fy(t(i-1),y(i-1))+fy(t(i-1),y(i-1))^2*f(t(i-1),y(i-1));
+    y(i)=y(i-1)+h*f(t(i-1),y(i-1))+(ft(t(i-1),y(i-1))+fy(t(i-1),y(i-1))*f(t(i-1),y(i-1)))*h^2/2+(a)*h^3/6;
+  endfor
+  %d=[t,y];
+  %P=newtonp(t,y);
+  %a=t0:0.01:t0+T;
+  %plot(a,polyval(P,a));
+  %hold on 
+  %plot(t,y,'*');
+endfunction
 
- data types:
-categorical
--
--
-numerical
--
--
-however
-most techniques are designed to handle only numeric types of data
-some other handle just categorical data
-real data is mixed
+function I=trapecios(f,a,b,n)
+h=(b-a)/n;
+I=0;
+for k=1:n
+    I=I+f(a+(k-1)*h)+f(a+k*h);
+endfor
+I=I*h/2;
+endfunction
 
-Jueves 24/08 laboratorio
+function EDO(f,ft,fy,ftt,fyy,fty,t0,y0,T,p)
+  [t,y1]=EULER(f,t0,y0,T,p);
+  [t,y2]=HEUN(f,t0,y0,T,p);
+  [t,y3]=TAYLOR(f,ft,fy,t0,y0,T,p);
+  [t,y4]=RK3(f,t0,y0,T,p);
+  [t,y5]=TAYLOR3(f,ft,fy,ftt,fyy,fty,t0,y0,T,p);
+  [t,y6]=RK4(f,t0,y0,T,p);
+  fprintf('|   t   |  EULER   |   HEUN   |   TAYLOR  |   RK3   |  TAYLOR3 |   RK4   |\n');
+  for k=1:p+1
+    fprintf('| %10.6f | %10.6f | %10.6f | %10.6f | %10.6f | %10.6f | %10.6f |\n',t(k),y1(k),y2(k),y3(k),y4(k),y5(k),y6(k));
+  endfor
+  hold on
+  plot(t,y1,'*b')
+  plot(t,y2,'*r')
+  plot(t,y3,'*g')
+  plot(t,y4,'*y')
+  plot(t,y5,'*m')
+  plot(t,y6,'*c')
+  
+  
+  
+endfunction
 
-La maldición de la dimensionalidad
-
-DOCUMENTACIÓN ENTREGADA
-
-
-Comparative Analysis of Nearest Neighbor Query Processing Techniques (sciencedirectassets.com)
-DSRS.pdf (leidenuniv.nl)
-
-
-
-
-Lunes 04/09 Teoría
-ley de los números grandes 
-
-Estructuras de datos espaciales
-
-1.1 introducción:
-
-La data espacial consiste en objetos que están inmersos en un espacio específico, estos pueden ser como por ejemplo: ciudades, estados, montañas, sistemas CAD( diseño asistido por computadora), los límites de un condado,tráfico, índice de criminalidad de una calle.  
-
-1.2 Spatial indexing
-
-es colocarnos en alguna estructura que logre indexarlos que nos permita acceder a los datos de una manera eficiente, es una técnica comúnmente usada en bases de  datos espaciales, en la construcción de este indexado espacial el rectángulo mínimo sirve mucho para aproximar el objeto. en los diferentes software que podemos ver usan técnicas de indexado espacial. 
-
-motivation for B-trees 
-las estructuras para datasets cannot be stored in main memory storing it on disk requires a different approach to efficiency.
-Assuming that a disk spins at 3600 RPM, one revolution occurs in 1/60 of a second, or 16.7 ms crudely, one disk access takes about the same time as 200.000 instructions.
-motivation (cont)
-assume tah we use an avl tree to store about 20 million records
-we en up a very deep binary tree with lots of different disk accesses log 20000000 is about 24, so this takes about 0.2 seconds
-we know we cant improve on the log 
-definition of a b-tree
-whats wrong with B-trees 
-no pueden almacenar nuevos tipos de información
-especificamente hablando informacion geometrica e informacion multidimensional
-el r tree provee una manera de lograrlo
-
-1.3 A brief review
-
-
-
-
-
-Lunes 11/09
-
-QUADTREES
-
-es comúnmente utilizado en estructuras jerárquicas es más una familia y es basada en la descomposición recursiva del espacio, existen diferentes tipos como:
-
-utilizando el tipo de dato para representar
-guiando el principio de descomposición
-la resolución (si es variable o no)
-
-anotación estructuras de datos temporales(investiga no lo estudies)
-
-el posicionamiento puede ser guiado o podemos elegir una disposición que nosotros elijamos según corresponda el caso
-
-REGIÓN QUADTREE
-
-Es el abordaje del cuatre que es basado en las regiones y es desarrollado en una imagen que es dividida en 4 regiones, si es que el array no está compuesto enteramente por 1s y 0s entonces nosotros los subdividimos en 4 cuadrantes y así sucesivamente.
-
-OCTREE
-
-lo mismo que el quadtree pero esta vez es aplicado en 3d lo que hace que pasemos de dividirlo en 4 a dividirlo en 8 
- 
-el ordenamiento de morton o z-order curve hace una mapeamiento multidimensional y lo transforma en una dimensión
- 
-clase 12/09
-
-POINT quadtree
-comparte todas las características de la familia quadtree, es muy eficiente cuando lo
-comparamos con puntos bidimensionales y a diferencia del región quadtree es incremental, es una estructura de datos que nos permite insertar una y otra vez puntos nuevos
-
-¿Cómo lo hace?
-cada vez que insertamos un nuevo punto este pasará a integrarse al centro de nuestras regiones y así sucesivamente con los nuevos puntos, puede existir un caso extremo que puede darse cuando  este salto de regiones choque siempre o como un vector o en una línea
-
-PR quadtree
-es una adaptación del región quadtree en esta versión cada uno de los nodos hojas puede estar vacío o a lo mucho 1 punto 
-
-KD-Tree
-
-nearest neighbor rule
-mediante la técnica del vecino más cercano tratando de minimizar la distancia entre 2 puntos funciona para machine learning, deep learning, para hacer recuperación en bases de datos 
-
-
-JUEVES 14/09
-
-
-
-lunes 18/09
-
-trabajo final
-características:
-spacial
-temporal (no obligatorio)
-mixed type
-para el parámetro de la distancia usaremos la distancia de gower si queremos
-
-Martes 19/09
-
-EL R-TREE
-
-ddd
-
-Martes 03/10
-
-el R+ tree
-
-attribute of split
-método de clasificación
-transformando los rectángulos en puntos en el espacio de mayor dimensiones
-usa los space filling curves para reducir la dimensionalidad
-dividir el espacio original en sub-regiones
-regiones disjuntas
-sobreponer regiones
-el R-tree busca que cada nodo intermedio encapsula todos los rectángulos que corresponden a los nodos inferiores
-
-para el R+TREE la idea que tiene es descomponer la region en 2 regiones para poder reducir a 0 superposiciones debido que tener demasiadas genera problema en las búsquedas.
-contras:
-necesitamos más memoria debido a que creamos más rectángulos
-la estructura tienes la siguiente forma
-nodo hoja
-nodo intermedio
+function p=lagrangeint(tx,ty)
+n=length(tx);
+L=poly(tx(2:n));
+p=L*ty(1)/polyval(L,tx(1));
+for k=2:n
+    L=poly([tx(1:k-1),tx(k+1:n)]);
+    p=p+L*ty(k)/polyval(L,tx(k));
+end
