@@ -13,6 +13,15 @@ function y=newton(g,x0,tol)
   y=x1;
 endfunction
 
+function I=trapeciosp(f,a,b,n)
+h=(b-a)/n;
+I=0;
+for k=1:n
+    I=I+polyval(f,(a+(k-1)*h))+polyval(f,(a+k*h));
+endfor
+I=I*h/2;
+endfunction
+
 function m=bise(f,a,b,tol)
   k=0;
   while abs(a-b)>tol
@@ -287,6 +296,20 @@ preguntares
 P=@(x) 3*x^3-exp(1)+2*x^2;
 A=@(x) trapecios(P,0,x,1000);
 W=(A(sqrt(5))-A(exp(1)-1))/A(3)
+
+preguntares
+f=@(x) x.^2-3.*x+sqrt(5);
+f1=[0 0 1 3 sqrt(5)]
+x=[-2 0 1 3 4];
+y=@(t) [3.*t t -2 t+1 2];
+P=@(a)newtonp(x,y(a));
+F=@(x) f(x)-P(x);
+D=sqrt(trapecios(@(x) (f(x)-P(x)).^2,-pi,pi,1000));
+u=trapeciosp(@(t) conv([0 0 1 -3 sqrt(5)]-newtonp([-2 0 1 3 4],[3.*t t -2 (t+1) 2]),[0 0 1 -3 sqrt(5)]-newtonp([-2 0 1 3 4],[3.*t t -2 (t+1) 2])),-pi,pi,100)
+der=polyder(u);
+roots(der);
+pol=[0 0 1 -3 sqrt(5)]-newtonp([-2 0 1 3 4],[3.*2.9754 2.9754 -2 (2.9754+1) 2]);
+D1=sqrt(trapeciosp(conv(pol,pol),-pi,pi,100))
 
 function dp=deripo(p)
   for i=1:length(p)
