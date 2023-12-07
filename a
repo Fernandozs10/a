@@ -283,6 +283,11 @@ g=@(x) x-df(x)/ddf(x);
 t=newton(g,3,0.0001)
 max=f(t)
 
+preguntares
+P=@(x) 3*x^3-exp(1)+2*x^2;
+A=@(x) trapecios(P,0,x,1000);
+W=(A(sqrt(5))-A(exp(1)-1))/A(3)
+
 function dp=deripo(p)
   for i=1:length(p)
     p(i)=(length(p)-i)*p(i);
