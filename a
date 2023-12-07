@@ -1,3 +1,32 @@
+function y=newton(g,x0,tol)
+  x1=g(x0);
+  k=0;
+  fprintf('|   k    |     m     |\n');
+  fprintf('|--------|-----------|\n');
+  fprintf('| %6.0f  |   %6.7f   |\n',k,x0);
+  while abs(x1-x0)>=tol
+    k=k+1;
+    fprintf('| %6.0f  |   %6.7f   |\n',k,x1);
+    x0=x1;
+    x1=g(x0);
+  endwhile
+  y=x1;
+endfunction
+
+function m=bise(f,a,b,tol)
+  k=0;
+  while abs(a-b)>tol
+    m=(a+b)/2;
+    fprintf('| %6.0f  | %6.8f |\n',k,m);
+    if f(a)*f(m)<0
+      b=m;
+    else
+      a=m;
+    endif
+    k=k+1;
+  endwhile
+endfunction
+
 function p=newtonp(tx,ty)
   n=length(tx);
   p=[ty(1)];
@@ -184,4 +213,69 @@ p=L*ty(1)/polyval(L,tx(1));
 for k=2:n
     L=poly([tx(1:k-1),tx(k+1:n)]);
     p=p+L*ty(k)/polyval(L,tx(k));
+
 end
+
+function r=intervalo(f,a,b,dx)
+  while a<b
+    c=f(a);
+    fprintf('|%3.2f | %3.6f \n',a,c);
+    a=a+dx;
+  endwhile
+endfunction
+
+preguntares
+f=@(x) x.*exp(x.^3);
+g=@(x) x.*cos(x);
+h=@(x) f(x)^2-g(x)^2;
+t=-0.2:0.02:1.2;
+hold on
+plot(t,f(t),'b');
+plot(t,g(t),'r');
+plot(0,3*t,'g');
+plot(1,3*t,'g');
+V=pi*trapecios(h,0,1,1000000)
+V1=pi*romberg(h,0,1,0.000001)
+
+preguntares
+a=0:0.01:1;
+f1=@(t,x) t^2*(sin((t^2)+2*x));
+[t1,y1]=HEUN(f1,0,pi,1,15);
+q=newtonp(t1,y1);
+g1=@(x) polyval(q,x);
+hold on
+plot(a,g1(a),'b')
+f2=@(t,x) 4*x*cos(x*t^2);
+[t2,y2]=HEUN(f2,0,2,1,15);
+q1=newtonp(t2,y2);
+%hold on
+g2=@(x) polyval(q1,x);
+hold on
+plot(a,g2(a),'r')
+h=@(x) g2(x)-g1(x);
+r1=secante1(h,0.1,0.0001)
+r2=secante1(h,1,0.0001)
+A = romberg(h,r1,r2,0.001)
+roots(q-q1)
+
+preguntares
+f=@(x) cos(x+3)-3*log((x-3).^2+1);
+df=@(x) -sin(x+3)-(6*x-18)/((x-3).^2+1);
+ddf=@(x) -cos(x+3)-(6-6*(x-3).^2)/((x-3).^2+1)^2;
+g=@(x) x-df(x)/ddf(x);
+t=newton(g,3,0.0001)
+max=f(t)
+
+function dp=deripo(p)
+  for i=1:length(p)
+    p(i)=(length(p)-i)*p(i);
+  endfor
+  dp=p(1:length(p)-1);
+endfunction
+
+function dp=intpo(p)
+  for i=1:length(p)
+    p(i)=p(i)/(length(p)-i+1);
+  endfor
+  dp=[p 0];
+endfunction
