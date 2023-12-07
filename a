@@ -259,6 +259,23 @@ A = romberg(h,r1,r2,0.001)
 roots(q-q1)
 
 preguntares
+Q=lagrange([0,1,2,3,4],[1,-1,0,2,1])
+polyout(Q,'x')
+f=@(t,x) polyval(Q,t)*cos(3*x);
+[t1,x1]=EULER(f,0,1,4,10);
+P=lagrange(t1',x1');
+%g=@(x) polyval(P,x)*exp(-s*x);
+%F=@(s) trapecios(g,0,pi,10000);
+F=@(s) trapecios(@(x) polyval(P,x)*exp(-s*x),0,pi,10000);
+a=0:0.01:4;
+plot(a,F(a),'b')
+S=0;
+for k=1:6
+  S=S+F(k*pi/3);
+endfor
+disp(S)
+
+preguntares
 f=@(x) cos(x+3)-3*log((x-3).^2+1);
 df=@(x) -sin(x+3)-(6*x-18)/((x-3).^2+1);
 ddf=@(x) -cos(x+3)-(6-6*(x-3).^2)/((x-3).^2+1)^2;
