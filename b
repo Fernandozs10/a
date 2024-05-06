@@ -1,3 +1,71 @@
+La maldición de la dimensionalidad se refiere únicamente a la dificultad de extraer una muestra 
+representativa de un conjunto de datos a medida que este va creciendo en dimensionalidad. 
+Seleccione una: Falso  
+
+La maldición de la dimensionalidad se refiere únicamente a como las dimensiones hacen mas 
+difícil el calculo de las distancias entre los datos a medida que estos crecen dimensionalmente.  
+Seleccione una: Falso  
+
+La maldición de la dimensionalidad se refiere al conjunto de fenómenos que aparece tras el 
+crecimiento exponencial del espacio de los datos.  
+Seleccione una: Verdadero  
+
+La variante del R-tree propuesta por Green (Green approach) propone introducir el cálculo del 
+perímetro de las regiones para que estas sean cada vez mas rectangulares, y así se evite la 
+sobreposición.  
+Seleccione una: Falso  
+
+Son estrategias para ordenar los octantes de un octree 
+I. Nearest Neighbor  
+II. Z-order  
+III. Range Query  
+IV. Bounding Box  
+V. Todas las anteriores Seleccione una: 
+La respuesta correcta es: FVFFF 
+
+Cuales de las siguientes Estructuras de datos utilizan la información geométrica (ordenamiento 
+geométrico) de sus datos  
+I. R-tree  
+II. KD-tree  
+III. R*-tree  
+IV. R (Greene approach) - tree  
+V. Bkd-tree  
+Respuesta correcta La respuesta correcta es: FFVVF
+
+La función PickSeeds del árbol R (R-tree) tiene como objetivo encontrar cuales son los mejores 
+objetos/datos para dividir en dos un nodo con overflow.  
+Seleccione una: Verdadero  
+
+El Kd-tree es una estructura de datos que me permite indizar únicamente datos en 2d y 3d 
+(d=dimensiones).  
+Seleccione una: Falso  
+
+El pr-quadtree tiene como estrategia la partición del espacio, tomando como centro de dicha 
+partición la posición del punto que se está insertando.  
+Seleccione una: Falso  
+
+El árbol R+ (R+ tree) toma en consideración el área, perímetro y la sobreposición de las nuevas 
+regiones a ser creadas durante su función de split (Node splitting)  
+Seleccione una: Falso  
+
+La función ReInsert del árbol R* (R* tree), es llamada únicamente una vez por cada nível del árbol 
+siempre que el nodo con overflow no sea la raíz.  
+Seleccione una: Verdadero 
+
+En el árbol R+ (R+ tree) el parámetro fill-factor me ayuda a limitar la cantidad de nodos que tendrá 
+dicho nivel de árbol.  
+Seleccione una: Falso 
+
+detalle los pasos necesarios para hacer un range query en un kd-tree:
+primero se envian los parametros necesarios respecto a la cantidad de dimensiones que fue construido el arbol
+entonces partiendo del nodo raiz, se comprueba si es que los sub arboles pueden contener datos dentro del rango enviado
+por ejemplo si se esta buscando en la primera dimension entre x[5-10], si el nodo raiz parte x en 3, solo la parte derecha
+puede puede contenerlo, por lo tanto solo busca ahi, pero si partiera x entre ese rango se tendria que hacer la busqueda en
+ambos subarboles, asi se continua recursivamente intercalando las dimensiones por cada nivel ya que es un kd tree
+de ahi cuando se llega a las hojas, se comprueba que el dato se encuentre dentro del rango de busqueda deseado, si es asi se
+retornara como parte del conjunto de datos que pertenecen a ese rango
+
+
 // Estructura de un nodo en el R-tree
 struct Node {
     // Definir aquí la estructura de un nodo
